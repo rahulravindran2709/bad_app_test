@@ -1,5 +1,6 @@
 var axios = require('axios');
 var express = require('express');
+const cors = require('cors');//Moved here from inside linus post name check
 
 pi = 3.14;
 this.boss = 'Luke';
@@ -33,36 +34,34 @@ console.log('getting data from API');
 
 axios.get('https://jsonplaceholder.typicode.com/posts').then((response) => {
     response = response.data;
+    //Changed check for equality of 0 to inequality
     if (response.length !== 0) {
         for (let i = 0; i < response.length; i++) {
-            const { title, body } = response[i]
+            //Destructured the title since we need to check the post name for linus
+            const { title } = response[i]
             if (title.length < 50) {
-                if (!title.includes('Linus')) {
-                    const cors = require('cors');
-                } else {
+                if (title.includes('Linus'))  {
                     console.log('Post name contains word Linus');
                 }
             } else {
                 console.log('Post name is too long');
             }
         }
+    //Moved the if condition to within the response length check because empty response would have caused this to go boom    
+    if (response[0].id == 1) {
+            console.log('Post 1, lets get the comments');
+            //Remove the nested ajax call since we can get the comments straight away
+          axios.get('https://jsonplaceholder.typicode.com/posts/1/comments').then((response2) => {
+            printAllComments(response2.data);
+            console.log('All ajax calls are finished');
+        })
+
+        };    
     } else {
         console.log('There are no posts');
     }
 
     // Lets load the first post and get its comments. Why? I dont know.
-
-    if (response[0].id == 1) {
-        console.log('Post 1, lets get the comments');
-
-      axios.get('https://jsonplaceholder.typicode.com/posts/1').then((response2) => {
-        axios.get('https://jsonplaceholder.typicode.com/posts/1/comments').then((response3) => {
-        printAllComments(response3.data);
-    });
-    });
-      console.log('All ajax calls are finished');
-    };
-
 });
 
 setTimeout(() => {
@@ -76,7 +75,7 @@ function printAllComments(comments) {
   comments.forEach((com) => {
     console.log('User ' + com.email + ' wrote:');
   console.log(com.body);
-  console.log();
+  //Removed empty console statement
 });
 }
 
