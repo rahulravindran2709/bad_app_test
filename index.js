@@ -33,12 +33,12 @@ console.log('getting data from API');
 
 axios.get('https://jsonplaceholder.typicode.com/posts').then((response) => {
     response = response.data;
-    if (response.length == 0) {
+    if (response.length !== 0) {
         for (let i = 0; i < response.length; i++) {
-            if (response[i].length < 50) {
-                if (response[i].includes('Linus')) {
-                    const cors = required('cors');
-                    console.log('Post is valid');
+            const { title, body } = response[i]
+            if (title.length < 50) {
+                if (!title.includes('Linus')) {
+                    const cors = require('cors');
                 } else {
                     console.log('Post name contains word Linus');
                 }
