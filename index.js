@@ -3,30 +3,38 @@ var express = require('express');
 const cors = require('cors');//Moved here from inside linus post name check
 
 pi = 3.14;
-this.boss = 'Luke';
-
-var YourName = 'John';
-var employees = [ 'James', 'Bobby', 'John' ];
-
+const currentBoss = 'Luke'
+//switched to camel case for yourName
+const yourName = 'John';
+const employees = [ 'James', 'Bobby', 'John' ];
+//Made isMe as arrow function and removed need for if else since triple equals returns a boolean
+// Made isMe as pure by removing dependancy on global
+const checkEmployee =(currentUser) => (employeeName)=> (currentUser === employeeName)
+const isMe = checkEmployee(yourName)
 console.log('===== STARTING APPLICATION =====')
 
 // Display the Bosses name
+//Remove need for using this variable
+const printBoss = (bossName) =>  console.log('Dont forget. ' + bossName + ' is the BOSS')
+const p = new Promise((resolve,reject)=> {
+    setTimeout(() => {
+        printBoss(currentBoss)
+        resolve()
+    }, 500);
+})
+p.then(() => {
+    // Display a list of employees
+    console.log('Current Employees:');
+    //Switched to foreach and used template literal 
+    //Switched to ternary instead of an if else
+    employees.forEach((employee) => {
+        isMe(employee) ? console.log(`${employee} - Hey.. Its you!`): console.log(employee); 
+    })
+})
 
-setTimeout(() => {
-    console.log('Dont forget. ' + this.boss + ' is the BOSS');
-}, 500);
 
-// Display a list of employees
 
-console.log('Current Employees:');
-for (var i = 0; i < employees.length; i += 1) {
-    if(isMe(employees[i])) {
-      console.log(employees[i] + ' - Hey.. Its you!');
-    }
-    else {
-      console.log(employees[i]);
-    }
-}
+
 
 // Get posts from API, see if any of the posts talk about Linus
 
@@ -79,10 +87,4 @@ function printAllComments(comments) {
 });
 }
 
-function isMe(employee_name) {
-    if (YourName === employee_name) {
-        return true;
-    } else {
-        return false;
-    }
-}
+
