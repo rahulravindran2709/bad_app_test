@@ -1,3 +1,4 @@
+# Read me!
 * index.original.js is the file given by you
 * index.js is the file I have created after refactoring
 * utils.js is another file I have created after refactoring which has some of the reusable functions
@@ -11,3 +12,9 @@
 * This async await is the definitive edition :P
 * In case not using async await, I have also included a promise version which can be seen by
      ``` git checkout v1.0 ``` 
+
+# Prerequisities
+ - node js 7.5+ (For async await)
+# Install
+``` git clone https://github.com/rahulravindran2709/bad_app_test.git```
+``` cd bad_app_test && npm install && npm start```     
