@@ -6,7 +6,7 @@ const checkStringLength = (size) =>  (title) => title && title.length < size
 const validateTitleLength = checkStringLength(50)
 //Restructured the name validation to make it more composable
 const doSomethingIfNameFound = (nameToFind) => (doSomething) => (title) => {
-    (title.indexOf(nameToFind)!==-1) ? doSomething(title)
+    (~title.indexOf(nameToFind)) ? doSomething(title)
         : console.log(`Title doesnt contain the name ${nameToFind}` )
 }
 const doSomethingIfLinus = doSomethingIfNameFound('Linus')
