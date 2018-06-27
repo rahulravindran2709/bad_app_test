@@ -25,22 +25,19 @@ async function main () {
         console.log('getting data from API');
         const allPosts = await axios.get('https://jsonplaceholder.typicode.com/posts')
         const { data } = allPosts;
-        if (data.length !== 0) {
-        // Change tradition for loop to forEach
+        if(!data || data.length === 0) {
+            console.log('There are no posts');
+            throw 'There are no posts'
+        } 
         data.forEach(({ title }) => {
             validateTitleLength(title) ? printTitleIfLinus(title): console.log('Post name is too long');
         })
         const foundPost = data.find(findFirstPost)
-        if(foundPost){
-            const commentsResponse = await axios.get('https://jsonplaceholder.typicode.com/posts/1/comments')
-            printAllComments(commentsResponse.data);
-        }else{
+        if(!foundPost){
             throw 'Could not find first post'
         }
-        } else {
-            console.log('There are no posts');
-            throw 'There are no posts'
-        }
+        const commentsResponse = await axios.get('https://jsonplaceholder.typicode.com/posts/1/comments')
+        printAllComments(commentsResponse.data);
         console.log('All ajax calls are finished');
         const finalDelay = await  delay(3000)
         console.log('===== ENDING APPLICATION =====')
