@@ -14,7 +14,7 @@ const employees = [ 'James', 'Bobby', 'John' ];
 // *Point-19*, *Point 19.1*,*Point 19.2*,*Point-19.3*
 const isMe = checkEmployee(yourName)
 //*Point-6*
-const printBoss = (bossName) =>  console.log('Dont forget. ' + bossName + ' is the BOSS')
+const printBoss = (bossName) =>  console.log(`Dont forget. ${bossName}  is the BOSS`)
 async function main () {
     try{
         console.log('===== STARTING APPLICATION =====')
