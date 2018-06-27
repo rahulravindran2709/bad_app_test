@@ -1,12 +1,13 @@
 {
-  "name": "bad",
+  "name": "linus-app",
   "version": "1.0.0",
-  "description": "Bad NodeJS practices",
+  "description": "This app will work on blog posts and do other Linus things",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
   },
-  "author": "",
+  "author": "Floatplane Media",
   "license": "ISC",
   "dependencies": {
     "axios": "*",
