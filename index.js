@@ -9,13 +9,14 @@ const currentBoss = 'Luke'
 const yourName = 'John';
 const employees = [ 'James', 'Bobby', 'John' ];
 const isMe = checkEmployee(yourName)
-console.log('===== STARTING APPLICATION =====')
+
 
 // Display the Bosses name
 //Remove need for using this variable
 const printBoss = (bossName) =>  console.log('Dont forget. ' + bossName + ' is the BOSS')
 async function main () {
     try{
+        console.log('===== STARTING APPLICATION =====')
         const delayed = await delay(500)
         printBoss(currentBoss)
         console.log('Current Employees:');
@@ -23,16 +24,15 @@ async function main () {
             isMe(employee) ? console.log(`${employee} - Hey.. Its you!`): console.log(employee); 
         })
         console.log('getting data from API');
-        const allPosts = await axios.get('https://jsonplaceholder.typicode.com/posts')
-        const { data } = allPosts;
-        if(!data || data.length === 0) {
+        const {data: allPosts} = await axios.get('https://jsonplaceholder.typicode.com/posts')
+        if(!allPosts || allPosts.length === 0) {
             console.log('There are no posts');
             throw 'There are no posts'
         } 
-        data.forEach(({ title }) => {
+        allPosts.forEach(({ title }) => {
             validateTitleLength(title) ? printTitleIfLinus(title): console.log('Post name is too long');
         })
-        const foundPost = data.find(findFirstPost)
+        const foundPost = allPosts.find(findFirstPost)
         if(!foundPost){
             throw 'Could not find first post'
         }
