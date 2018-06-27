@@ -11,6 +11,21 @@ const employees = [ 'James', 'Bobby', 'John' ];
 // Made isMe as pure by removing dependancy on global
 const checkEmployee =(currentUser) => (employeeName)=> (currentUser === employeeName)
 const isMe = checkEmployee(yourName)
+const checkStringLength = (size) =>  (title) => title && title.length < size
+const validateTitleLength = checkStringLength(50)
+//Restructured the name validation to make it more composable
+const doSomethingIfNameFound = (nameToFind) => (doSomething) => (title) => {
+    (title.indexOf(nameToFind)!==-1) ? doSomething(title)
+        : console.log(`Title doesnt contain the name ${nameToFind}` )
+}
+const doSomethingIfLinus = doSomethingIfNameFound('Linus')
+const printTitleIfLinus = doSomethingIfLinus((title) => console.log('Valid post'))
+const findPostById = (idToFind) => (post) => post.id === idToFind
+const findFirstPost = findPostById(1)
+const printAllComments = (comments) => {
+    console.log(`----------\nComments:`);
+    comments.forEach(({ email, body}) => console.log(`User ${email} wrote:\n${body}\n`));
+  }
 console.log('===== STARTING APPLICATION =====')
 
 // Display the Bosses name
@@ -31,60 +46,60 @@ p.then(() => {
         isMe(employee) ? console.log(`${employee} - Hey.. Its you!`): console.log(employee); 
     })
 })
-
-
-
-
-
-// Get posts from API, see if any of the posts talk about Linus
-
-console.log('getting data from API');
-
-axios.get('https://jsonplaceholder.typicode.com/posts').then((response) => {
-    response = response.data;
+.then(() => {
+    // Get posts from API, see if any of the posts talk about Linus
+    //Moved axios call to then since it return a promise
+    console.log('getting data from API');
+    return axios.get('https://jsonplaceholder.typicode.com/posts')
+})
+.then((response) => {
+    //Avoid reassigning parameters -- bad practice
+    const { data } = response;
     //Changed check for equality of 0 to inequality
-    if (response.length !== 0) {
-        for (let i = 0; i < response.length; i++) {
-            //Destructured the title since we need to check the post name for linus
-            const { title } = response[i]
-            if (title.length < 50) {
-                if (title.includes('Linus'))  {
-                    console.log('Post name contains word Linus');
-                }
-            } else {
-                console.log('Post name is too long');
-            }
-        }
-    //Moved the if condition to within the response length check because empty response would have caused this to go boom    
-    if (response[0].id == 1) {
-            console.log('Post 1, lets get the comments');
-            //Remove the nested ajax call since we can get the comments straight away
-          axios.get('https://jsonplaceholder.typicode.com/posts/1/comments').then((response2) => {
-            printAllComments(response2.data);
-            console.log('All ajax calls are finished');
+    if (data.length !== 0) {
+        // Change tradition for loop to forEach
+        data.forEach(({ title }) => {
+            validateTitleLength(title) ? printTitleIfLinus(title): console.log('Post name is too long');
         })
-
-        };    
+    return data 
     } else {
         console.log('There are no posts');
+        throw 'There are no posts'
     }
-
+})
+//Refactord the comment call into another then
+.then((data) => {
     // Lets load the first post and get its comments. Why? I dont know.
-});
+    //Moved the if condition to within the response length check because empty response would have caused this to go boom  
+    // Also changed the equality check to strict  
+    console.log(data, 'What was obtained')
+    const foundPost = data.find(findFirstPost)
+    if(!foundPost){
+        throw 'Couldnt find post id 1'
+    }
+    return foundPost
+})
+.then(() => {
+    console.log('Post 1, lets get the comments');
+    return axios.get('https://jsonplaceholder.typicode.com/posts/1/comments')
+})
+.then((response) => {
+    printAllComments(response.data);
+})
+.then(() => {
+    console.log('All ajax calls are finished');
+})
+.catch(() => {
+    console.log('Some error occured')
+})
+.then(() => {
+    setTimeout(() => {
+        console.log('===== ENDING APPLICATION =====')
+      }, 3000);
+})
 
-setTimeout(() => {
-  console.log('===== ENDING APPLICATION =====')
-}, 3000);
 
-function printAllComments(comments) {
-  console.log('----------');
-  console.log('Comments:');
 
-  comments.forEach((com) => {
-    console.log('User ' + com.email + ' wrote:');
-  console.log(com.body);
-  //Removed empty console statement
-});
-}
+
 
 
